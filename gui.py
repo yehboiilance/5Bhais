@@ -1,69 +1,67 @@
 import wx
 import time
 
-
 class MyFrame(wx.Frame):    
     def __init__(self):
-        super().__init__(parent = None, title = "Focus or Fail")
-        panel = wx.Panel(self)        
-        my_sizer = wx.BoxSizer(wx.VERTICAL)        
-        self.text_ctrl = wx.TextCtrl(panel)
-        my_sizer.Add(self.text_ctrl, 0, wx.ALL | wx.EXPAND, 5)        
+        super().__init__(parent=None, title="Focus or Fail")
+        panel = wx.Panel(self)
+        my_sizer = wx.BoxSizer(wx.VERTICAL)
+        
+        self.timer_label = wx.StaticText(panel, label="00:00")
+        my_sizer.Add(self.timer_label, 0, wx.ALL | wx.CENTER, 5)
+
         my_btn = wx.Button(panel, label="Start focusing")
         my_btn.Bind(wx.EVT_BUTTON, self.on_press)
         my_sizer.Add(my_btn, 0, wx.ALL | wx.CENTER, 5)        
+        
         panel.SetSizer(my_sizer)
+        
+        self.study_timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.on_study_timer, self.study_timer)
+        
+        self.break_timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.on_break_timer, self.break_timer)
+        
+        self.study_duration = 0
+        self.break_duration = 0
+        
         self.Show()
 
     def on_press(self, event):
-        value = self.text_ctrl.GetValue()
-        if not value:
-            print("You didn't enter anything!")
+        self.study_duration = 25 * 60  # Set study duration to 25 minutes (1500 seconds)
+        self.break_duration = 5 * 60  # Set break duration to 5 minutes (300 seconds)
+        self.start_study_timer()
+
+    def start_study_timer(self):
+        self.study_timer.Start(1000)  # Start study timer to tick every 1 second
+        print("Study timer started!")
+
+    def on_study_timer(self, event):
+        if self.study_duration > 0:
+            self.study_duration -= 1
+            m, s = divmod(self.study_duration, 60)
+            timer = "{:02d}:{:02d}".format(m, s)
+            self.timer_label.SetLabel(timer)
         else:
-            print(f'You typed: "{value}"')
+            self.study_timer.Stop()
+            self.timer_label.SetLabel("Time for a break!")
+            print("Time for a break!")
+            self.start_break_timer()
 
+    def start_break_timer(self):
+        self.break_timer.Start(1000)  # Start break timer to tick every 1 second
+        print("Break timer started!")
 
-    def increment(i):
-        i += 1
-
-    def decrement(i):
-        i -= 1
-
-    def studyTimer(minutes):
-        while (minutes):
-            m, s = divmod(minutes, 60)
+    def on_break_timer(self, event):
+        if self.break_duration > 0:
+            self.break_duration -= 1
+            m, s = divmod(self.break_duration, 60)
             timer = "{:02d}:{:02d}".format(m, s)
-            print(timer, end = "\r")
-            time.sleep(1)
-            minutes -= 1
-        print("Time for a break!")
-
-    def breakTimer(minutes):
-        while (minutes):
-            m, s = divmod(minutes, 60)
-            timer = "{:02d}:{:02d}".format(m, s)
-            print(timer, end = "\r")
-            time.sleep(1)
-            minutes -= 1
-    
-    def mainTimer():
-        #First click start button
-        print("*Starts focusing*")
-        
-
-
-
-    def countdownTimer():
-        # While app is running
-
-        while (True):
-
-            mins, secs = divmod(25, 0) 
-            timer = '{:02d}:{:02d}'.format(mins, secs) 
-            print(timer, end="\r") 
-            time.sleep(1) 
-            t -= 1
-
+            self.timer_label.SetLabel(timer)
+        else:
+            self.break_timer.Stop()
+            self.timer_label.SetLabel("Break time is over! Back to focus!")
+            print("Break time is over! Back to focus!")
 
 if __name__ == '__main__':
     app = wx.App()

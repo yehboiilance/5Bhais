@@ -12,4 +12,4 @@ def countdown(minutes):
 # input the time value in seconds  
 
 # function call at the program  
-countdown(1500)  
+countdown(1500)
