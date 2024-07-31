@@ -34,7 +34,6 @@ class MyFrame(wx.Frame):
 
     def start_study_timer(self):
         self.study_timer.Start(1000)  # Start study timer to tick every 1 second
-        print("Study timer started!")
 
     def on_study_timer(self, event):
         if self.study_duration > 0:
