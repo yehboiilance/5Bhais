@@ -13,7 +13,7 @@ class ClockApp(wx.App):
         menubar.Append(menu, '&File')
         self.frame.SetMenuBar(menubar)
         
-        # Bind the quit item to an event
+        # Bind
         self.frame.Bind(wx.EVT_MENU, self.on_quit, quit_item)
 
         # Timer
@@ -27,7 +27,7 @@ class ClockApp(wx.App):
         start_button = wx.Button(self.panel, label="Start", pos=(10, 100))
         start_button.Bind(wx.EVT_BUTTON, self.on_start)
 
-        # Rectangle for timer (We'll use a static text for simplicity)
+        # Rectangle for timer
         self.time_display = wx.StaticText(self.panel, label="00:00", pos=(10, 50), size=(100, 50))
 
         # Show the frame
